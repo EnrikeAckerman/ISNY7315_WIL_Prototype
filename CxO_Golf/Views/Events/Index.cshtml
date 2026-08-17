@@ -1,0 +1,166 @@
+﻿@model List<CxO_Golf.Models.EventViewModel>
+
+@{
+    ViewData["Title"] = "Events";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Event management interface for Event Managers.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+*@
+
+
+<div class="page-heading">
+
+    <div>
+
+        <span class="page-label">
+            EVENT MANAGEMENT
+        </span>
+
+        <h1>Events</h1>
+
+        <p>
+            Create, monitor and manage CxO Series golf events.
+        </p>
+
+    </div>
+
+
+    <a href="#"
+       class="primary-action">
+
+        + Create Event
+
+    </a>
+
+</div>
+
+
+<div class="event-toolbar">
+
+    <div class="event-count">
+
+        <strong>
+            @Model.Count
+        </strong>
+
+        <span>
+            events
+        </span>
+
+    </div>
+
+
+    <div class="event-filters">
+
+        <button class="filter-button active">
+            All Events
+        </button>
+
+        <button class="filter-button">
+            Upcoming
+        </button>
+
+        <button class="filter-button">
+            Planning
+        </button>
+
+        <button class="filter-button">
+            Completed
+        </button>
+
+    </div>
+
+</div>
+
+
+<section class="events-table-container">
+
+    <div class="events-table-header">
+
+        <span>EVENT</span>
+        <span>DATE</span>
+        <span>VENUE</span>
+        <span>PLAYERS</span>
+        <span>4-BALLS</span>
+        <span>STATUS</span>
+        <span></span>
+
+    </div>
+
+
+    @foreach (var golfEvent in Model)
+    {
+
+        <a asp-controller="Events"
+           asp-action="Details"
+           asp-route-id="@golfEvent.Id"
+           class="event-table-row">
+
+            <div class="event-table-name">
+
+                <strong>
+                    @golfEvent.EventName
+                </strong>
+
+                <span>
+                    Event #@golfEvent.Id.ToString("000")
+                </span>
+
+            </div>
+
+
+            <div class="event-table-date">
+
+                @golfEvent.Date
+
+            </div>
+
+
+            <div class="event-table-venue">
+
+                @golfEvent.Venue
+
+            </div>
+
+
+            <div class="event-table-number">
+
+                @golfEvent.PlayerCount
+
+            </div>
+
+
+            <div class="event-table-number">
+
+                @golfEvent.FourBallCount
+
+            </div>
+
+
+            <div class="event-table-status @golfEvent.StatusClass">
+
+                @golfEvent.Status
+
+            </div>
+
+
+            <div class="event-table-arrow">
+
+                →
+
+            </div>
+
+        </a>
+
+    }
+
+</section>

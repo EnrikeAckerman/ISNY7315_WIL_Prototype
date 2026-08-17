@@ -1,0 +1,386 @@
+﻿@model CxO_Golf.Models.TeeTimeManagementViewModel
+
+@{
+    ViewData["Title"] = "Tee Times";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Purpose:
+    Allows Event Managers to review and adjust the tee-time
+    schedule for a CxO Series golf event.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+*@
+
+
+<div class="detail-back">
+
+    <a asp-controller="Events"
+       asp-action="Details"
+       asp-route-id="@Model.EventId">
+
+        ← Back to Event
+
+    </a>
+
+</div>
+
+
+<div class="tee-time-heading">
+
+    <div>
+
+        <span class="page-label">
+            SCHEDULE MANAGEMENT
+        </span>
+
+        <h1>
+            Tee Times
+        </h1>
+
+        <p>
+            @Model.EventName · @Model.Venue · @Model.Date
+        </p>
+
+    </div>
+
+
+    <div class="tee-time-actions">
+
+        <button type="button"
+                class="secondary-action"
+                onclick="generateSchedule()">
+
+            Generate Schedule
+
+        </button>
+
+        <button type="button"
+                class="primary-action"
+                onclick="saveSchedule()">
+
+            Save Changes
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="tee-time-summary">
+
+    <div>
+
+        <strong>
+            @Model.TeeTimes.Count
+        </strong>
+
+        <span>
+            tee times
+        </span>
+
+    </div>
+
+
+    <div>
+
+        <strong>
+            @(Model.TeeTimes.Count * 4)
+        </strong>
+
+        <span>
+            scheduled players
+        </span>
+
+    </div>
+
+
+    <div>
+
+        <strong>
+            10 min
+        </strong>
+
+        <span>
+            starting interval
+        </span>
+
+    </div>
+
+
+    <div>
+
+        <strong>
+            1st Tee
+        </strong>
+
+        <span>
+            starting location
+        </span>
+
+    </div>
+
+</div>
+
+
+<section class="tee-times-container">
+
+    <div class="tee-times-header">
+
+        <span>TIME</span>
+
+        <span>4-BALL</span>
+
+        <span>PLAYERS</span>
+
+        <span>AVG. HCP</span>
+
+        <span>TEE</span>
+
+        <span>STATUS</span>
+
+        <span></span>
+
+    </div>
+
+
+    <div id="teeTimeList">
+
+        @foreach (var teeTime in Model.TeeTimes)
+        {
+
+            <div class="tee-time-row"
+                 draggable="true"
+                 data-tee-time-id="@teeTime.Id"
+                 ondragstart="dragTeeTime(event)"
+                 ondragover="allowTeeDrop(event)"
+                 ondrop="dropTeeTime(event)">
+
+
+                <div class="tee-time-value">
+
+                    <strong>
+                        @teeTime.Time
+                    </strong>
+
+                </div>
+
+
+                <div class="tee-time-fourball">
+
+                    <strong>
+                        @teeTime.FourBall
+                    </strong>
+
+                    <span>
+                        4 players
+                    </span>
+
+                </div>
+
+
+                <div class="tee-time-players">
+
+                    @teeTime.PlayerSummary
+
+                </div>
+
+
+                <div class="tee-time-handicap">
+
+                    @teeTime.AverageHandicap.ToString("0.0")
+
+                </div>
+
+
+                <div class="tee-time-tee">
+
+                    @teeTime.Tee
+
+                </div>
+
+
+                <div class="tee-time-status @teeTime.StatusClass">
+
+                    @teeTime.Status
+
+                </div>
+
+
+                <div class="tee-time-drag">
+
+                    ⋮⋮
+
+                </div>
+
+            </div>
+
+        }
+
+    </div>
+
+</section>
+
+
+<div class="tee-time-help">
+
+    <strong>
+        Schedule adjustment
+    </strong>
+
+    <span>
+        Drag a tee-time row to another position to reorder the
+        starting sequence.
+    </span>
+
+</div>
+
+
+<div id="scheduleMessage"
+     class="save-message">
+
+    Schedule changes saved successfully.
+
+</div>
+
+
+<script>
+
+    let draggedTeeTime = null;
+
+
+    function dragTeeTime(event) {
+
+        draggedTeeTime = event.currentTarget;
+
+        event.dataTransfer.effectAllowed = "move";
+
+        draggedTeeTime.classList.add("tee-time-dragging");
+    }
+
+
+    function allowTeeDrop(event) {
+
+        event.preventDefault();
+
+        event.currentTarget.classList.add("tee-time-drop-active");
+    }
+
+
+    function dropTeeTime(event) {
+
+        event.preventDefault();
+
+        const target = event.currentTarget;
+
+        if (!draggedTeeTime || draggedTeeTime === target) {
+
+            return;
+
+        }
+
+
+        const list =
+            document.getElementById("teeTimeList");
+
+
+        const rows =
+            Array.from(list.children);
+
+
+        const draggedIndex =
+            rows.indexOf(draggedTeeTime);
+
+        const targetIndex =
+            rows.indexOf(target);
+
+
+        if (draggedIndex < targetIndex) {
+
+            list.insertBefore(
+                draggedTeeTime,
+                target.nextSibling
+            );
+
+        }
+        else {
+
+            list.insertBefore(
+                draggedTeeTime,
+                target
+            );
+
+        }
+
+
+        clearDragState();
+
+    }
+
+
+    function clearDragState() {
+
+        if (draggedTeeTime) {
+
+            draggedTeeTime.classList.remove(
+                "tee-time-dragging"
+            );
+
+        }
+
+
+        document.querySelectorAll(".tee-time-row")
+            .forEach(row => {
+
+                row.classList.remove(
+                    "tee-time-drop-active"
+                );
+
+            });
+
+
+        draggedTeeTime = null;
+
+    }
+
+
+    document.addEventListener("dragend", function() {
+
+        clearDragState();
+
+    });
+
+
+    function generateSchedule() {
+
+        alert(
+            "Automatic tee-time generation will be connected to the event scheduling service during implementation."
+        );
+
+    }
+
+
+    function saveSchedule() {
+
+        const message =
+            document.getElementById("scheduleMessage");
+
+        message.classList.add("visible");
+
+
+        setTimeout(function() {
+
+            message.classList.remove("visible");
+
+        }, 2500);
+
+    }
+
+</script>

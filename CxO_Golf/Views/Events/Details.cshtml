@@ -1,0 +1,427 @@
+﻿@model CxO_Golf.Models.EventDetailsViewModel
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Purpose:
+    Provides Event Managers with an overview of an individual
+    CxO Series golf event and access to event-management functions.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+*@
+
+
+<!-- Back navigation -->
+
+<div class="detail-back">
+
+    <a asp-controller="Events"
+       asp-action="Index">
+
+        ← Back to Events
+
+    </a>
+
+</div>
+
+
+<!-- Event heading -->
+
+<div class="event-detail-heading">
+
+    <div>
+
+        <span class="page-label">
+            EVENT DETAILS
+        </span>
+
+        <h1>
+            @Model.EventName
+        </h1>
+
+        <p>
+            @Model.Venue
+        </p>
+
+    </div>
+
+
+    <div class="event-detail-status">
+
+        <span class="status-label">
+            STATUS
+        </span>
+
+        <strong>
+            @Model.Status
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- Event information -->
+
+<section class="event-information-section">
+
+    <div class="event-information-grid">
+
+        <div class="event-information-item">
+
+            <span>
+                DATE
+            </span>
+
+            <strong>
+                @Model.Date
+            </strong>
+
+        </div>
+
+
+        <div class="event-information-item">
+
+            <span>
+                FIRST TEE
+            </span>
+
+            <strong>
+                @Model.StartTime
+            </strong>
+
+        </div>
+
+
+        <div class="event-information-item">
+
+            <span>
+                PLAYERS
+            </span>
+
+            <strong>
+                @Model.PlayerCount
+            </strong>
+
+        </div>
+
+
+        <div class="event-information-item">
+
+            <span>
+                4-BALLS
+            </span>
+
+            <strong>
+                @Model.FourBallCount
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Registration overview -->
+
+<div class="event-detail-grid">
+
+
+    <section class="event-detail-section">
+
+        <div class="section-heading">
+
+            <div class="section-heading-left">
+
+                <span class="section-heading-label">
+                    REGISTRATION
+                </span>
+
+                <h2>
+                    Player Registration
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="registration-overview">
+
+            <div class="registration-number">
+
+                <strong>
+                    @Model.RegisteredPlayers
+                </strong>
+
+                <span>
+                    Registered
+                </span>
+
+            </div>
+
+
+            <div class="registration-divider"></div>
+
+
+            <div class="registration-number">
+
+                <strong>
+                    @Model.PendingRegistrations
+                </strong>
+
+                <span>
+                    Pending
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="registration-progress">
+
+            <div class="registration-progress-label">
+
+                <span>
+                    Registration progress
+                </span>
+
+                <strong>
+                    92%
+                </strong>
+
+            </div>
+
+
+            <div class="progress-line">
+
+                <div class="progress-line-fill"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Event readiness -->
+
+    <section class="event-detail-section">
+
+        <div class="section-heading">
+
+            <div class="section-heading-left">
+
+                <span class="section-heading-label">
+                    EVENT READINESS
+                </span>
+
+                <h2>
+                    Preparation
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="readiness-list">
+
+            <div class="readiness-item">
+
+                <span class="readiness-check">
+                    ✓
+                </span>
+
+                <span>
+                    Venue confirmed
+                </span>
+
+                <strong>
+                    Ready
+                </strong>
+
+            </div>
+
+
+            <div class="readiness-item">
+
+                <span class="readiness-check">
+                    ✓
+                </span>
+
+                <span>
+                    Player registrations
+                </span>
+
+                <strong>
+                    In progress
+                </strong>
+
+            </div>
+
+
+            <div class="readiness-item">
+
+                <span class="readiness-pending">
+                    •
+                </span>
+
+                <span>
+                    4-Ball allocations
+                </span>
+
+                <strong>
+                    Review
+                </strong>
+
+            </div>
+
+
+            <div class="readiness-item">
+
+                <span class="readiness-check">
+                    ✓
+                </span>
+
+                <span>
+                    Tee-time schedule
+                </span>
+
+                <strong>
+                    Ready
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- Management actions -->
+
+<section class="event-actions-section">
+
+    <div class="event-actions-heading">
+
+        <span>
+            EVENT MANAGEMENT
+        </span>
+
+        <h2>
+            Manage this event
+        </h2>
+
+    </div>
+
+
+    <div class="event-actions-grid">
+
+
+        <a href="#"
+           class="event-action">
+
+            <div>
+
+                <strong>
+                    Manage Players
+                </strong>
+
+                <span>
+                    View registrations and participant information.
+                </span>
+
+            </div>
+
+            <span class="event-action-arrow">
+                →
+            </span>
+
+        </a>
+
+
+        <a asp-controller="FourBalls"
+           asp-action="Index"
+           asp-route-eventId="@Model.Id"
+           class="event-action">
+
+            <div>
+
+                <strong>
+                    Manage 4-Balls
+                </strong>
+
+                <span>
+                    Generate balanced groups or manually adjust allocations.
+                </span>
+
+            </div>
+
+            <span class="event-action-arrow">
+                →
+            </span>
+
+        </a>
+
+
+        <a asp-controller="TeeTimes"
+           asp-action="Index"
+           asp-route-eventId="@Model.Id"
+           class="event-action">
+
+            <div>
+
+                <strong>
+                    Manage Tee Times
+                </strong>
+
+                <span>
+                    Review and adjust the event tee-time schedule.
+                </span>
+
+            </div>
+
+            <span class="event-action-arrow">
+                →
+            </span>
+
+        </a>
+
+
+        <a href="#"
+           class="event-action">
+
+            <div>
+
+                <strong>
+                    Event Reports
+                </strong>
+
+                <span>
+                    Export event and player information.
+                </span>
+
+            </div>
+
+            <span class="event-action-arrow">
+                →
+            </span>
+
+        </a>
+
+    </div>
+
+</section>

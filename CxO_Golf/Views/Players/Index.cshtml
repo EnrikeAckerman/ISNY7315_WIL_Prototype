@@ -1,0 +1,202 @@
+﻿@model List<CxO_Golf.Models.PlayerViewModel>
+
+@{
+    ViewData["Title"] = "Players";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Purpose:
+    Player management interface for Event Managers.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+*@
+
+
+<div class="page-heading">
+
+    <div>
+
+        <span class="page-label">
+            PLAYER MANAGEMENT
+        </span>
+
+        <h1>Players</h1>
+
+        <p>
+            View registered executives and manage event participation.
+        </p>
+
+    </div>
+
+
+    <a href="#"
+       class="primary-action">
+
+        + Add Player
+
+    </a>
+
+</div>
+
+
+<div class="players-toolbar">
+
+    <div class="player-total">
+
+        <strong>
+            @Model.Count
+        </strong>
+
+        <span>
+            players shown
+        </span>
+
+    </div>
+
+
+    <div class="player-search">
+
+        <input type="text"
+               id="playerSearch"
+               placeholder="Search players or companies..."
+               onkeyup="filterPlayers()" />
+
+    </div>
+
+</div>
+
+
+<section class="players-table-container">
+
+    <div class="players-table-header">
+
+        <span>PLAYER</span>
+        <span>COMPANY</span>
+        <span>HANDICAP</span>
+        <span>REGISTRATION</span>
+        <span></span>
+
+    </div>
+
+
+    <div id="playersList">
+
+        @foreach (var player in Model)
+        {
+
+            <a asp-controller="Players"
+               asp-action="Details"
+               asp-route-id="@player.Id"
+               class="player-table-row">
+
+
+                <div class="player-table-name">
+
+                    <div class="player-list-initials">
+                        @GetInitials(player.Name)
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            @player.Name
+                        </strong>
+
+                        <span>
+                            @player.Email
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="player-company">
+                    @player.Company
+                </div>
+
+
+                <div class="player-handicap">
+                    @player.Handicap.ToString("0.0")
+                </div>
+
+
+                <div class="player-status @player.StatusClass">
+                    @player.RegistrationStatus
+                </div>
+
+
+                <div class="player-table-arrow">
+                    →
+                </div>
+
+            </a>
+
+        }
+
+    </div>
+
+</section>
+
+
+<script>
+
+    function filterPlayers() {
+
+        const search =
+            document.getElementById("playerSearch")
+                .value
+                .toLowerCase();
+
+        const players =
+            document.querySelectorAll(".player-table-row");
+
+
+        players.forEach(function(player) {
+
+            const text =
+                player.textContent.toLowerCase();
+
+
+            if (text.includes(search)) {
+
+                player.style.display = "grid";
+
+            }
+            else {
+
+                player.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+</script>
+
+
+@functions {
+
+    public string GetInitials(string name)
+    {
+        var parts = name.Split(' ');
+
+        if (parts.Length >= 2)
+        {
+            return $"{parts[0][0]}{parts[^1][0]}".ToUpper();
+        }
+
+        return name.Length > 1
+            ? name.Substring(0, 2).ToUpper()
+            : name.ToUpper();
+    }
+
+}

@@ -1,0 +1,407 @@
+﻿@model CxO_Golf.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Dashboard designed for the Event Manager role.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+
+    W3C (n.d.) Web Content Accessibility Guidelines (WCAG) 2.2.
+    Available at:
+    https://www.w3.org/TR/WCAG22/
+    (Accessed: 14 August 2026).
+*@
+
+
+<div class="dashboard-header">
+
+    <div>
+
+        <span class="dashboard-section-label">
+            EVENT MANAGEMENT
+        </span>
+
+        <h1>Dashboard</h1>
+
+        <p>
+            Overview of upcoming CxO Series events and activity.
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-date">
+
+        <span>Current date</span>
+
+        <strong>14 August 2026</strong>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SUMMARY
+     ===================================================== -->
+
+<div class="summary-grid">
+
+    <div class="summary-item">
+
+        <span class="summary-item-label">
+            Upcoming Events
+        </span>
+
+        <span class="summary-item-value">
+            @Model.UpcomingEvents
+        </span>
+
+        <span class="summary-item-note">
+            Scheduled within 90 days
+        </span>
+
+    </div>
+
+
+    <div class="summary-item">
+
+        <span class="summary-item-label">
+            Registered Players
+        </span>
+
+        <span class="summary-item-value">
+            @Model.RegisteredPlayers
+        </span>
+
+        <span class="summary-item-note">
+            Across upcoming events
+        </span>
+
+    </div>
+
+
+    <div class="summary-item">
+
+        <span class="summary-item-label">
+            Pending Registrations
+        </span>
+
+        <span class="summary-item-value">
+            @Model.PendingRegistrations
+        </span>
+
+        <span class="summary-item-note">
+            Awaiting confirmation
+        </span>
+
+    </div>
+
+
+    <div class="summary-item">
+
+        <span class="summary-item-label">
+            Requires Attention
+        </span>
+
+        <span class="summary-item-value">
+            @Model.EventsRequiringAttention
+        </span>
+
+        <span class="summary-item-note">
+            Events requiring action
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     EVENTS / TEE TIMES
+     ===================================================== -->
+
+<div class="dashboard-grid">
+
+
+    <!-- Upcoming Events -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div class="section-heading-left">
+
+                <span class="section-heading-label">
+                    EVENT SCHEDULE
+                </span>
+
+                <h2>Upcoming Events</h2>
+
+            </div>
+
+            <a asp-controller="Events"
+               asp-action="Index"
+               class="section-heading-link">
+
+                View all
+
+            </a>
+
+        </div>
+
+
+        @foreach (var golfEvent in Model.UpcomingEventsList)
+        {
+
+            var dateParts = golfEvent.Date.Split(' ');
+
+
+            <div class="event-item">
+
+                <div class="event-date">
+
+                    <span class="event-date-day">
+                        @dateParts[0]
+                    </span>
+
+                    <span class="event-date-month">
+                        @dateParts[1]
+                    </span>
+
+                </div>
+
+
+                <div class="event-details">
+
+                    <div class="event-name">
+                        @golfEvent.EventName
+                    </div>
+
+                    <span class="event-venue">
+                        @golfEvent.Venue
+                    </span>
+
+                </div>
+
+
+                <div class="event-player-count">
+
+                    <strong>
+                        @golfEvent.PlayerCount
+                    </strong>
+
+                    <span>
+                        Players
+                    </span>
+
+                </div>
+
+
+                <div class="event-status @golfEvent.StatusClass">
+
+                    @golfEvent.Status
+
+                </div>
+
+
+                <div>
+                    →
+                </div>
+
+            </div>
+
+        }
+
+    </section>
+
+
+    <!-- Tee Times -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+
+            <div class="section-heading-left">
+
+                <span class="section-heading-label">
+                    SCHEDULE
+                </span>
+
+                <h2>Upcoming Tee Times</h2>
+
+            </div>
+
+            <a asp-controller="TeeTimes"
+               asp-action="Index"
+               asp-route-eventId="1"
+               class="section-heading-link">
+
+                View all
+
+            </a>
+
+        </div>
+
+
+        @foreach (var teeTime in Model.UpcomingTeeTimes)
+        {
+
+            <div class="tee-item">
+
+                <div class="tee-time">
+                    @teeTime.Time
+                </div>
+
+
+                <div>
+
+                    <span class="tee-group">
+                        @teeTime.Group
+                    </span>
+
+                    <span class="tee-event">
+                        @teeTime.EventName
+                    </span>
+
+                </div>
+
+
+                <div class="tee-arrow">
+                    →
+                </div>
+
+            </div>
+
+        }
+
+    </section>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+     ===================================================== -->
+
+<section class="quick-actions">
+
+    <div class="quick-actions-heading">
+
+        <span>
+            MANAGEMENT
+        </span>
+
+        <h2>
+            Quick Actions
+        </h2>
+
+    </div>
+
+
+    <div class="quick-actions-grid">
+
+
+        <a href="#"
+           class="quick-action">
+
+            <div>
+
+                <span class="quick-action-title">
+                    Create Event
+                </span>
+
+                <span class="quick-action-description">
+                    Set up a new CxO Series golf event.
+                </span>
+
+            </div>
+
+            <span class="quick-action-arrow">
+                →
+            </span>
+
+        </a>
+
+
+        <a asp-controller="Players"
+           asp-action="Index"
+           class="quick-action">
+
+            <div>
+
+                <span class="quick-action-title">
+                    Manage Players
+                </span>
+
+                <span class="quick-action-description">
+                    Review registrations and participant information.
+                </span>
+
+            </div>
+
+            <span class="quick-action-arrow">
+                →
+            </span>
+
+        </a>
+
+
+        <a asp-controller="FourBalls"
+           asp-action="Index"
+           asp-route-eventId="1"
+           class="quick-action">
+
+            <div>
+
+                <span class="quick-action-title">
+                    Manage 4-Balls
+                </span>
+
+                <span class="quick-action-description">
+                    Generate and manually adjust player groups.
+                </span>
+
+            </div>
+
+            <span class="quick-action-arrow">
+                →
+            </span>
+
+        </a>
+
+
+        <a href="#"
+           class="quick-action">
+
+            <div>
+
+                <span class="quick-action-title">
+                    View Reports
+                </span>
+
+                <span class="quick-action-description">
+                    Review event and participation information.
+                </span>
+
+            </div>
+
+            <span class="quick-action-arrow">
+                →
+            </span>
+
+        </a>
+
+
+    </div>
+
+</section>

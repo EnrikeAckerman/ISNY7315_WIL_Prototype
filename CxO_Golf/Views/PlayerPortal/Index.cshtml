@@ -1,0 +1,468 @@
+﻿@model CxO_Golf.Models.PlayerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Player Dashboard";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Purpose:
+    Player-facing dashboard designed for executives attending
+    a CxO Series golf event.
+
+    The interface prioritises quick access to information
+    required on the day of the event.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+
+    W3C (n.d.) Web Content Accessibility Guidelines (WCAG) 2.2.
+    Available at:
+    https://www.w3.org/TR/WCAG22/
+    (Accessed: 14 August 2026).
+*@
+
+
+<div class="player-portal">
+
+
+    <!-- =====================================================
+         PLAYER HEADER
+         ===================================================== -->
+
+    <header class="player-portal-header">
+
+        <div class="player-portal-brand">
+
+            <img src="~/images/cxoseries-logo.jpg"
+                 alt="CxO Series"
+                 class="player-portal-logo" />
+
+        </div>
+
+
+        <div class="player-portal-user">
+
+            <div>
+
+                <strong>
+                    @Model.PlayerName
+                </strong>
+
+                <span>
+                    @Model.Company
+                </span>
+
+            </div>
+
+
+            <div class="player-portal-avatar">
+
+                @GetInitials(Model.PlayerName)
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main class="player-portal-content">
+
+
+        <!-- =================================================
+             WELCOME
+             ================================================= -->
+
+        <section class="player-welcome">
+
+            <span>
+                CxO SERIES GOLF DAY
+            </span>
+
+            <h1>
+                Welcome, @Model.PlayerName.Split(' ')[0]
+            </h1>
+
+            <p>
+                Your event information for today.
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             EVENT INFORMATION
+             ================================================= -->
+
+        <section class="player-event-card">
+
+            <div class="player-event-card-heading">
+
+                <div>
+
+                    <span>
+                        YOUR EVENT
+                    </span>
+
+                    <h2>
+                        @Model.EventName
+                    </h2>
+
+                </div>
+
+
+                <div class="player-event-status">
+                    Confirmed
+                </div>
+
+            </div>
+
+
+            <div class="player-event-meta">
+
+                <div>
+
+                    <span>
+                        DATE
+                    </span>
+
+                    <strong>
+                        @Model.EventDate
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        VENUE
+                    </span>
+
+                    <strong>
+                        @Model.Venue
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             TEE TIME HERO
+             ================================================= -->
+
+        <section class="player-tee-card">
+
+            <div>
+
+                <span class="player-card-label">
+                    YOUR TEE TIME
+                </span>
+
+                <strong class="player-tee-time">
+                    @Model.TeeTime
+                </strong>
+
+                <span class="player-tee-location">
+                    @Model.Tee
+                </span>
+
+            </div>
+
+
+            <div class="player-tee-group">
+
+                <span>
+                    4-BALL
+                </span>
+
+                <strong>
+                    @Model.FourBall
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             4-BALL
+             ================================================= -->
+
+        <section class="player-portal-section">
+
+            <div class="player-portal-section-heading">
+
+                <div>
+
+                    <span>
+                        YOUR GROUP
+                    </span>
+
+                    <h2>
+                        @Model.FourBall
+                    </h2>
+
+                </div>
+
+
+                <span class="player-handicap-badge">
+                    HCP @Model.Handicap.ToString("0.0")
+                </span>
+
+            </div>
+
+
+            <div class="player-group-list">
+
+
+                <!-- Current player -->
+
+                <div class="player-group-member current-player">
+
+                    <div class="player-group-avatar">
+                        @GetInitials(Model.PlayerName)
+                    </div>
+
+
+                    <div class="player-group-details">
+
+                        <strong>
+                            @Model.PlayerName
+                        </strong>
+
+                        <span>
+                            @Model.Company · You
+                        </span>
+
+                    </div>
+
+
+                    <strong class="player-group-handicap">
+                        @Model.Handicap.ToString("0.0")
+                    </strong>
+
+                </div>
+
+
+                @foreach (var member in Model.GroupMembers)
+                {
+
+                    <div class="player-group-member">
+
+                        <div class="player-group-avatar">
+                            @GetInitials(member.Name)
+                        </div>
+
+
+                        <div class="player-group-details">
+
+                            <strong>
+                                @member.Name
+                            </strong>
+
+                            <span>
+                                @member.Company
+                            </span>
+
+                        </div>
+
+
+                        <strong class="player-group-handicap">
+                            @member.Handicap.ToString("0.0")
+                        </strong>
+
+                    </div>
+
+                }
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             WEATHER
+             ================================================= -->
+
+        <section class="player-portal-section">
+
+            <div class="player-portal-section-heading">
+
+                <div>
+
+                    <span>
+                        COURSE CONDITIONS
+                    </span>
+
+                    <h2>
+                        Today's Weather
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="player-weather">
+
+                <div class="player-weather-main">
+
+                    <strong>
+                        @Model.WeatherTemperature
+                    </strong>
+
+                    <span>
+                        @Model.WeatherCondition
+                    </span>
+
+                </div>
+
+
+                <div class="player-weather-detail">
+
+                    <span>
+                        WIND
+                    </span>
+
+                    <strong>
+                        @Model.WeatherWind
+                    </strong>
+
+                </div>
+
+
+                <div class="player-weather-detail">
+
+                    <span>
+                        RAIN
+                    </span>
+
+                    <strong>
+                        @Model.WeatherRain
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EVENT UPDATE
+             ================================================= -->
+
+        <section class="player-update">
+
+            <div class="player-update-icon">
+                !
+            </div>
+
+
+            <div>
+
+                <span>
+                    EVENT UPDATE
+                </span>
+
+                <p>
+                    @Model.EventUpdate
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             QUICK LINKS
+             ================================================= -->
+
+        <section class="player-portal-links">
+
+            <a href="#"
+               class="player-portal-link">
+
+                <div>
+
+                    <strong>
+                        Event Information
+                    </strong>
+
+                    <span>
+                        View venue and event details.
+                    </span>
+
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+
+            <a href="#"
+               class="player-portal-link">
+
+                <div>
+
+                    <strong>
+                        Contact Event Manager
+                    </strong>
+
+                    <span>
+                        Get assistance with the event.
+                    </span>
+
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+        </section>
+
+
+    </main>
+
+
+    <footer class="player-portal-footer">
+
+        <span>
+            © 2026 CxO Series
+        </span>
+
+        <span>
+            Golf Management System
+        </span>
+
+    </footer>
+
+</div>
+
+
+@functions {
+
+    public string GetInitials(string name)
+    {
+        var parts = name.Split(' ');
+
+        if (parts.Length >= 2)
+        {
+            return $"{parts[0][0]}{parts[^1][0]}".ToUpper();
+        }
+
+        return name.Length > 1
+            ? name.Substring(0, 2).ToUpper()
+            : name.ToUpper();
+    }
+
+}

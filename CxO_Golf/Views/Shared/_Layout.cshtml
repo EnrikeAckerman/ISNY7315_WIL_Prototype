@@ -1,0 +1,189 @@
+﻿@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Purpose:
+    Shared application layout and responsive navigation.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+
+    Bootstrap (n.d.) Bootstrap documentation. Available at:
+    https://getbootstrap.com/docs/
+    (Accessed: 14 August 2026).
+
+    The visual design and navigation structure were developed specifically
+    for the CxO Series Golf Management System.
+*@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - CxO Series</title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/CxO_Golf.styles.css"
+          asp-append-version="true" />
+
+</head>
+
+<body>
+
+    <header class="site-header">
+
+        <div class="site-header-inner">
+
+            <a class="brand"
+               asp-controller="Home"
+               asp-action="Index">
+
+                <img src="~/images/cxoseries-logo.jpg"
+                     alt="CxO Series"
+                     class="brand-logo" />
+
+            </a>
+
+
+            <button class="mobile-menu-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavigation"
+                    aria-controls="mainNavigation"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+
+            <nav id="mainNavigation"
+                 class="main-navigation collapse">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="navigation-link active">
+
+                    Dashboard
+
+                </a>
+
+                <a asp-controller="Events"
+                   asp-action="Index"
+                   class="navigation-link">
+
+                    Events
+
+                </a>
+
+                <a asp-controller="Players"
+                   asp-action="Index"
+                   class="navigation-link">
+
+                    Players
+
+                </a>
+
+                <a asp-controller="FourBalls"
+                   asp-action="Index"
+                   asp-route-eventId="1"
+                   class="navigation-link">
+
+                    4-Balls
+
+                </a>
+
+                <a asp-controller="TeeTimes"
+                   asp-action="Index"
+                   asp-route-eventId="1"
+                   class="navigation-link">
+
+                    Tee Times
+
+                </a>
+
+                <a href="#"
+                   class="navigation-link">
+
+                    Reports
+
+                </a>
+
+            </nav>
+
+
+            <div class="header-user">
+
+                <div class="header-user-text">
+
+                    <strong>Event Manager</strong>
+
+                    <span>Administrator</span>
+
+                </div>
+
+                <div class="header-user-initials">
+                    EM
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main class="site-main">
+
+        @RenderBody()
+
+    </main>
+
+
+    <footer class="site-footer">
+
+        <div class="site-footer-inner">
+
+            <span>
+                © 2026 CxO Series
+            </span>
+
+            <span>
+                Golf Management System
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

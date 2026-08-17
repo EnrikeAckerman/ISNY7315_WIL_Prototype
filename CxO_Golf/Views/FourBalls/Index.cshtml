@@ -1,0 +1,323 @@
+﻿@model CxO_Golf.Models.FourBallManagementViewModel
+
+@{
+    ViewData["Title"] = "4-Ball Management";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Purpose:
+    Allows Event Managers to review automatically generated 4-Ball
+    groups and manually adjust player allocations.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+
+    MDN Web Docs (n.d.) HTML Drag and Drop API.
+    Available at:
+    https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+    (Accessed: 14 August 2026).
+*@
+
+
+<div class="detail-back">
+
+    <a asp-controller="Events"
+       asp-action="Details"
+       asp-route-id="@Model.EventId">
+
+        ← Back to Event
+
+    </a>
+
+</div>
+
+
+<div class="fourball-header">
+
+    <div>
+
+        <span class="page-label">
+            GROUP MANAGEMENT
+        </span>
+
+        <h1>
+            4-Ball Management
+        </h1>
+
+        <p>
+            @Model.EventName · @Model.Venue · @Model.Date
+        </p>
+
+    </div>
+
+
+    <div class="fourball-actions">
+
+        <button type="button"
+                class="secondary-action"
+                onclick="generateGroups()">
+
+            Generate Balanced Groups
+
+        </button>
+
+        <button type="button"
+                class="primary-action"
+                onclick="saveGroups()">
+
+            Save Changes
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="fourball-notice">
+
+    <div>
+
+        <strong>
+            Manual adjustment enabled
+        </strong>
+
+        <span>
+            Drag players between 4-Balls to make manual changes to
+            the automatically generated groups.
+        </span>
+
+    </div>
+
+    <span class="generation-status">
+        Groups generated 14 August 2026
+    </span>
+
+</div>
+
+
+<div class="fourball-grid">
+
+    @foreach (var group in Model.Groups)
+    {
+
+        <section class="fourball-group"
+                 data-group-id="@group.Id">
+
+            <div class="fourball-group-header">
+
+                <div>
+
+                    <span class="fourball-group-number">
+                        @group.Name
+                    </span>
+
+                    <span class="fourball-group-count">
+                        @group.Players.Count Players
+                    </span>
+
+                </div>
+
+                <span class="fourball-average">
+                    @group.AverageHandicap.ToString("0.0")
+                </span>
+
+            </div>
+
+
+            <div class="fourball-average-label">
+                Average Handicap
+            </div>
+
+
+            <div class="player-drop-zone"
+                 ondragover="allowDrop(event)"
+                 ondrop="dropPlayer(event)">
+
+
+                @foreach (var player in group.Players)
+                {
+
+                    <div class="player-row"
+                         draggable="true"
+                         data-player-id="@player.Id"
+                         ondragstart="dragPlayer(event)">
+
+                        <div class="player-initials">
+                            @GetInitials(player.Name)
+                        </div>
+
+
+                        <div class="player-information">
+
+                            <strong>
+                                @player.Name
+                            </strong>
+
+                            <span>
+                                @player.Company
+                            </span>
+
+                        </div>
+
+
+                        <div class="player-handicap">
+
+                            <strong>
+                                @player.Handicap.ToString("0.0")
+                            </strong>
+
+                            <span>
+                                HCP
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                }
+
+            </div>
+
+        </section>
+
+    }
+
+</div>
+
+
+<div id="saveMessage"
+     class="save-message">
+
+    Changes saved successfully.
+
+</div>
+
+
+<script>
+
+    let draggedPlayer = null;
+
+
+    function dragPlayer(event) {
+
+        draggedPlayer = event.currentTarget;
+
+        event.dataTransfer.effectAllowed = "move";
+
+        event.currentTarget.classList.add("player-dragging");
+    }
+
+
+    function allowDrop(event) {
+
+        event.preventDefault();
+
+        event.currentTarget.classList.add("drop-active");
+    }
+
+
+    function dropPlayer(event) {
+
+        event.preventDefault();
+
+        const dropZone = event.currentTarget;
+
+        if (draggedPlayer) {
+
+            dropZone.appendChild(draggedPlayer);
+
+            draggedPlayer.classList.remove("player-dragging");
+
+        }
+
+        dropZone.classList.remove("drop-active");
+
+        draggedPlayer = null;
+
+        updateGroupCounts();
+    }
+
+
+    document.addEventListener("dragend", function() {
+
+        if (draggedPlayer) {
+
+            draggedPlayer.classList.remove("player-dragging");
+
+        }
+
+        document.querySelectorAll(".player-drop-zone")
+            .forEach(zone => zone.classList.remove("drop-active"));
+
+    });
+
+
+    function updateGroupCounts() {
+
+        document.querySelectorAll(".fourball-group")
+            .forEach(group => {
+
+                const count =
+                    group.querySelectorAll(".player-row").length;
+
+                const countElement =
+                    group.querySelector(".fourball-group-count");
+
+                countElement.textContent =
+                    count + (count === 1 ? " Player" : " Players");
+
+            });
+
+    }
+
+
+    function generateGroups() {
+
+        alert(
+            "Balanced 4-Ball generation will be connected to the grouping engine in the implementation phase."
+        );
+
+    }
+
+
+    function saveGroups() {
+
+        const message =
+            document.getElementById("saveMessage");
+
+        message.classList.add("visible");
+
+        setTimeout(function() {
+
+            message.classList.remove("visible");
+
+        }, 2500);
+
+    }
+
+</script>
+
+
+@functions {
+
+    public string GetInitials(string name)
+    {
+        var parts = name.Split(' ');
+
+        if (parts.Length >= 2)
+        {
+            return $"{parts[0][0]}{parts[^1][0]}".ToUpper();
+        }
+
+        return name.Length > 1
+            ? name.Substring(0, 2).ToUpper()
+            : name.ToUpper();
+    }
+
+}

@@ -1,0 +1,326 @@
+﻿@model CxO_Golf.Models.PlayerDetailsViewModel
+
+@{
+    ViewData["Title"] = "Player Details";
+}
+
+@*
+    CxO Series Golf Management System
+    INSY7315 WIL - Task 1 Prototype
+
+    Purpose:
+    Displays detailed information about a registered executive,
+    including their event participation, 4-Ball allocation and tee time.
+
+    References:
+    Microsoft (n.d.) ASP.NET Core MVC documentation. Available at:
+    https://learn.microsoft.com/aspnet/core/mvc/
+    (Accessed: 14 August 2026).
+*@
+
+
+<!-- Back navigation -->
+
+<div class="detail-back">
+
+    <a asp-controller="Players"
+       asp-action="Index">
+
+        ← Back to Players
+
+    </a>
+
+</div>
+
+
+<!-- Player heading -->
+
+<div class="player-detail-heading">
+
+    <div class="player-detail-identity">
+
+        <div class="player-detail-avatar">
+            @GetInitials(Model.Name)
+        </div>
+
+
+        <div>
+
+            <span class="page-label">
+                PLAYER PROFILE
+            </span>
+
+            <h1>
+                @Model.Name
+            </h1>
+
+            <p>
+                @Model.Company
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="player-detail-status">
+
+        <span>
+            REGISTRATION
+        </span>
+
+        <strong>
+            @Model.RegistrationStatus
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- Personal information -->
+
+<section class="player-detail-section">
+
+    <div class="player-detail-section-heading">
+
+        <span>
+            CONTACT INFORMATION
+        </span>
+
+        <h2>
+            Executive details
+        </h2>
+
+    </div>
+
+
+    <div class="player-contact-grid">
+
+        <div class="player-contact-item">
+
+            <span>
+                EMAIL
+            </span>
+
+            <strong>
+                @Model.Email
+            </strong>
+
+        </div>
+
+
+        <div class="player-contact-item">
+
+            <span>
+                PHONE
+            </span>
+
+            <strong>
+                @Model.Phone
+            </strong>
+
+        </div>
+
+
+        <div class="player-contact-item">
+
+            <span>
+                COMPANY
+            </span>
+
+            <strong>
+                @Model.Company
+            </strong>
+
+        </div>
+
+
+        <div class="player-contact-item">
+
+            <span>
+                HANDICAP INDEX
+            </span>
+
+            <strong class="player-detail-handicap">
+                @Model.Handicap.ToString("0.0")
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Event allocation -->
+
+<section class="player-detail-section">
+
+    <div class="player-detail-section-heading">
+
+        <span>
+            EVENT PARTICIPATION
+        </span>
+
+        <h2>
+            Current allocation
+        </h2>
+
+    </div>
+
+
+    <div class="player-event-grid">
+
+        <div class="player-event-item">
+
+            <span>
+                EVENT
+            </span>
+
+            <strong>
+                @Model.EventName
+            </strong>
+
+        </div>
+
+
+        <div class="player-event-item">
+
+            <span>
+                4-BALL
+            </span>
+
+            <strong>
+                @Model.FourBall
+            </strong>
+
+        </div>
+
+
+        <div class="player-event-item">
+
+            <span>
+                TEE TIME
+            </span>
+
+            <strong>
+                @Model.TeeTime
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Actions -->
+
+<section class="player-detail-actions">
+
+    <div>
+
+        <span>
+            PLAYER MANAGEMENT
+        </span>
+
+        <h2>
+            Available actions
+        </h2>
+
+    </div>
+
+
+    <div class="player-action-grid">
+
+        <a asp-controller="PlayerPortal"
+           asp-action="Index"
+           class="player-action">
+
+            <div>
+
+                <strong>
+                    Preview Player Dashboard
+                </strong>
+
+                <span>
+                    View the mobile experience available to this player.
+                </span>
+
+            </div>
+
+            <span>
+                →
+            </span>
+
+        </a>
+
+
+        <a asp-controller="FourBalls"
+           asp-action="Index"
+           asp-route-eventId="1"
+           class="player-action">
+
+            <div>
+
+                <strong>
+                    View 4-Ball
+                </strong>
+
+                <span>
+                    View and manage this player's assigned group.
+                </span>
+
+            </div>
+
+            <span>
+                →
+            </span>
+
+        </a>
+
+
+        <a href="#"
+           class="player-action">
+
+            <div>
+
+                <strong>
+                    Send Notification
+                </strong>
+
+                <span>
+                    Send an event update or reminder to the player.
+                </span>
+
+            </div>
+
+            <span>
+                →
+            </span>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+@functions {
+
+    public string GetInitials(string name)
+    {
+        var parts = name.Split(' ');
+
+        if (parts.Length >= 2)
+        {
+            return $"{parts[0][0]}{parts[^1][0]}".ToUpper();
+        }
+
+        return name.Length > 1
+            ? name.Substring(0, 2).ToUpper()
+            : name.ToUpper();
+    }
+
+}
